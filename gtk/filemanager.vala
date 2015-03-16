@@ -1,52 +1,56 @@
 using Gtk;
-public class FileManger : Window {
-	private Entry entry_path;
-	private Button btn_back;
-	private Treeview dir_list;
-	private string path;
+
+public class FileManager : Gtk.Window {
 	
-	public FileManger() {
-		this.title = "FileManger";
+	public FileManager() {
+		this.title = "Gtk File Manager";
 		this.border_width = 10;
 		this.window_position = WindowPosition.CENTER;
-		this.set_default_size (800, 600);
-		this.destroy.connect (this.on_window_destroy);
+		this.set_default_size(800, 600);
+		this.destroy.connect(Gtk.main_quit);
 
-		var scrolled_window = new ScrolledWindow(null, null);
-		this.add (scrolled_window);
-		
+		// Address field
 		var hbox = new Box(Orientation.HORIZONTAL, 0);
-		var lbl_path = new Label("Path");
-		hbox.pack_start(lbl_path, false, false, 10);
-		entry_path = new Entry();
-		hbox.pack_start(entry_path, true, true, 10);
-		btn_back = new Button.with_label("<<");
-		hbox.pack_start (btn_back, false, false, 10);
+
+		var btn_home = new Gtk.Button.from_icon_name("go-home", Gtk.IconSize.BUTTON);
+		btn_home.clicked.connect(() => {
+
+			});
+		hbox.pack_start(btn_home, false, false, 0);
+
+		var ety_address = new Gtk.Entry();
+		ety_address.set_text(this.get_home_directory());
+		hbox.pack_start(ety_address, true, true, 0);
+		
+		var btn_go = new Gtk.Button.with_label(" >> ");
+		btn_go.clicked.connect(() => {
+				
+			});
+		hbox.pack_start(btn_go, false, false, 0);
+		
+		// Show Area
+		// TODO
 
 		var vbox = new Box(Orientation.VERTICAL, 0);
 		vbox.pack_start(hbox, false, false, 0);
-		dir_list = new TreeView();
-		this.set_dir_list(dir_list);
 
-		vbox.pack_start(dir_list, true, true, 0);
-
-		scrolled_window.add(vbox);
-
-		this.path = "./";
+		this.add(vbox);
 	}
 
-	public void set_dir_list(TreeView dir_list) {
-		var dir = Dir.open(this.path);
+	public void load_icon() {
+		
 	}
-	public void on_window_destroy() {
-		Gtk.main_quit();
+
+	public string get_home_directory() {
+		return Environment.get_variable("HOME");
 	}
 }
+
 
 public static int main(string[] args) {
     Gtk.init(ref args);
 
-	var window = new FileManger();
+	var window = new FileManager();
 	window.show_all();
 	Gtk.main();
     return 0;

@@ -12,5 +12,7 @@ filemanager:filemanager.vala
 	valac --pkg gtk+-3.0 filemanager.vala
 iconview:iconview.vala
 	valac --pkg gtk+-3.0 $<
+application:application.vala
+	valac --pkg gtk+-3.0 $<
 clean:
-	rm -f basic sync textViewer treeView filemanager
+	rm -f basic sync textViewer treeView filemanager iconview application

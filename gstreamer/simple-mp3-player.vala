@@ -1,17 +1,17 @@
 using Gst;
 
 public static int main(string[] args) {
-	private Gst.Element source;
-	private GSt.Element slink;
-	private Gst.Pipeline pipeline;
-	private Gst.Element decoder;
+	Gst.Element source;
+	Gst.Element slink;
+	Gst.Pipeline pipeline;
+	Gst.Element decoder;
 	
 	// init
     Gst.init(ref args);
 
-	source = new Gst.ElementFactory.make("filesrc", "disk_source");
-	decoder = new Gst.ElementFactory.make("mad", "decoder");
-	slink = new Gst.ElementFactory.make("audioslink", "play_audio");
+	source = Gst.ElementFactory.make("filesrc", "disk_source");
+	decoder = Gst.ElementFactory.make("mad", "decoder");
+	slink = Gst.ElementFactory.make("autoaudiosink", "play_audio");
 	pipeline = new Gst.Pipeline("audio-player");
 
 	if (source == null || decoder == null ||
@@ -20,7 +20,12 @@ public static int main(string[] args) {
 		return -1;
 	}
 
-	
-	
+	source.set("location", args[1]);
+	pipeline.add_many (source, decoder, slink);
+	pipeline.set_state (Gst.State.PLAYING);
+	Gst.Bus bus = pipeline.get_bus();
+	bus.timed_pop_filtered (Gst.CLOCK_TIME_NONE, Gst.MessageType.ERROR | Gst.MessageType.EOS);
+
+	pipeline.set_state (Gst.State.NULL);
     return 0;
 }
